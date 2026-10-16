@@ -9,7 +9,7 @@ Best practices, SEO) on *every* page — with the AMS branding in the tab bar.
 | [`ams-blogger-theme.xml`](ams-blogger-theme.xml) | **The theme to install.** Light, zero-JS, inline CSS, tab nav bar. |
 | [`legacy-dark-v1.xml`](legacy-dark-v1.xml) | The previous dark glass theme (v1) — kept for reference, not maintained. |
 | [`tools/build.py`](tools/build.py) | Renders `preview/` and audits the theme (see *Check it yourself*). |
-| `preview/` | Generated static preview pages (`index.html`, `post.html`, `label.html`). |
+| [`preview/`](preview) | Generated static preview pages (`index.html`, `post.html`, `label.html`) + screenshots (`shot-*.png`) — committed, see [`preview/README.md`](preview/README.md). |
 
 Production rules: [`../engine/theme.md`](../engine/theme.md) · brand: [`../engine/BRAND.md`](../engine/BRAND.md).
 
