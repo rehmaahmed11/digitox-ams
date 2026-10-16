@@ -1,0 +1,8 @@
+*.bat text eol=crlf
+*.nsi text eol=crlf
+*.sh  text eol=lf
+*.exe binary
+*.ico binary
+*.bmp binary
+*.mp4 binary
+*.wav binary

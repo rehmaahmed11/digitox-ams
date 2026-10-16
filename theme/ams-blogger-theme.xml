@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html b:css='false' b:defaultwidgetversion='2' b:layoutsVersion='3' b:responsive='true' b:templateUrl='ams-blogger-theme.xml' b:templateVersion='1.0.0' expr:dir='data:blog.languageDirection' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+  <meta content='width=device-width, initial-scale=1' name='viewport'/>
+  <meta content='IE=edge' http-equiv='X-UA-Compatible'/>
+  <b:include data='blog' name='all-head-content'/>
+  <title><data:blog.pageTitle/></title>
+  <b:if cond='data:blog.metaDescription'>
+    <meta expr:content='data:blog.metaDescription' name='description'/>
+  </b:if>
+
+  <b:skin><![CDATA[
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ============ AMS theme ============ */
+:root{
+  --bg:#06080F; --panel:#18191D; --panel2:#282A30;
+  --accent1:#409CFF; --accent2:#005CD6; --accentText:#8CD1FF;
+  --red1:#FF2626; --red2:#CC0000;
+  --text:#EDEFF4; --muted:#8A93A8;
+  --radius:20px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:'Inter',Arial,Helvetica,sans-serif; font-size:17px; line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+body:before{
+  content:''; position:fixed; inset:0; pointer-events:none;
+  background:
+    radial-gradient(600px 400px at 85% -5%, rgba(64,156,255,.18), transparent 60%),
+    radial-gradient(500px 350px at 5% 30%, rgba(0,92,214,.12), transparent 60%);
+}
+a{color:var(--accentText); text-decoration:none}
+a:hover{color:#fff}
+
+.wrap{max-width:1040px; margin:0 auto; padding:0 22px; position:relative}
+
+/* ---- header ---- */
+.ams-header{padding:44px 0 30px}
+.ams-title{
+  margin:0; font-size:44px; font-weight:800; letter-spacing:2px;
+  background:linear-gradient(90deg,#fff 0%,var(--accentText) 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+}
+.ams-title a{-webkit-text-fill-color:transparent}
+.ams-tagline{margin:8px 0 0; color:var(--muted); font-size:16px; letter-spacing:.5px}
+.ams-nav{margin:26px 0 0; padding:14px 0; border-top:1px solid rgba(255,255,255,.10); border-bottom:1px solid rgba(255,255,255,.10)}
+.ams-nav ul{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:22px}
+.ams-nav a{color:var(--text); font-weight:600; font-size:14px; letter-spacing:1.5px; text-transform:uppercase; opacity:.85}
+.ams-nav a:hover{opacity:1; color:var(--accentText)}
+
+/* ---- layout ---- */
+.main-wrap{display:flex; gap:34px; padding:38px 0 10px; align-items:flex-start}
+.main{flex:1 1 auto; min-width:0}
+.sidebar{flex:0 0 280px}
+
+/* ---- posts (glass cards) ---- */
+.post{
+  background:linear-gradient(180deg,rgba(40,42,48,.94),rgba(24,25,29,.94));
+  border:1px solid rgba(255,255,255,.12); border-radius:var(--radius);
+  padding:34px 38px; margin:0 0 30px;
+  box-shadow:0 22px 50px rgba(0,0,0,.45);
+}
+.post h2{margin:0 0 6px; font-size:30px; line-height:1.25; font-weight:800}
+.post h2 a{color:#fff}
+.post h2 a:hover{color:var(--accentText)}
+.post-date{color:var(--muted); font-size:13px; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 18px}
+.post-body{color:var(--text)}
+.post-body h3{font-size:21px; margin:28px 0 10px; color:#fff}
+.post-body img{max-width:100%; height:auto; border-radius:14px; border:1px solid rgba(255,255,255,.10); margin:16px 0}
+.post-body blockquote{
+  margin:22px 0; padding:16px 22px; border-left:4px solid var(--accent1);
+  background:rgba(64,156,255,.08); border-radius:0 12px 12px 0; color:var(--muted)
+}
+.post-body ol,.post-body ul{padding-left:22px}
+.post-body li{margin:8px 0}
+.post-body strong{color:#fff}
+.post-labels{margin-top:22px}
+.label-chip{
+  display:inline-block; margin:0 8px 8px 0; padding:6px 14px; border-radius:999px;
+  background:rgba(64,156,255,.12); border:1px solid rgba(64,156,255,.35);
+  color:var(--accentText); font-size:13px; font-weight:600
+}
+.label-chip:hover{background:rgba(64,156,255,.25); color:#fff}
+
+/* ---- sidebar ---- */
+.widget{
+  background:rgba(24,25,29,.8); border:1px solid rgba(255,255,255,.10);
+  border-radius:16px; padding:22px; margin:0 0 24px
+}
+.widget h3{
+  margin:0 0 14px; font-size:13px; letter-spacing:2px; text-transform:uppercase; color:var(--accentText)
+}
+.widget ul{list-style:none; margin:0; padding:0}
+.widget li{margin:9px 0}
+.widget li a{color:var(--text); font-size:15px}
+.widget li a:hover{color:var(--accentText)}
+.search input{
+  width:100%; padding:11px 14px; border-radius:10px; border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.06); color:var(--text); font-family:inherit; font-size:15px
+}
+
+/* ---- buttons (used in posts) ---- */
+.btn{
+  display:inline-block; padding:13px 30px; border-radius:999px; font-weight:700; font-size:15px;
+  letter-spacing:.4px; margin:8px 12px 8px 0; -webkit-text-fill-color:#fff
+}
+.btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2)); color:#fff}
+.btn-primary:hover{filter:brightness(1.12)}
+.btn-red{background:linear-gradient(90deg,var(--red1),var(--red2)); color:#fff}
+.btn-red:hover{filter:brightness(1.12)}
+
+/* ---- footer ---- */
+.ams-footer{
+  margin:44px 0 34px; padding:26px 0; text-align:center;
+  border-top:1px solid rgba(255,255,255,.10); color:var(--muted); font-size:14px
+}
+.ams-footer a{color:var(--accentText)}
+
+/* ---- pager ---- */
+.blog-pager{margin:6px 0 30px; text-align:center}
+.blog-pager a{
+  display:inline-block; padding:11px 24px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.18); color:var(--text); font-weight:600
+}
+.blog-pager a:hover{border-color:var(--accent1); color:var(--accentText)}
+
+@media (max-width:800px){
+  .main-wrap{flex-direction:column}
+  .sidebar{flex:1 1 auto; width:100%}
+  .post{padding:24px 20px}
+  .post h2{font-size:24px}
+  .ams-title{font-size:32px}
+}
+  ]]></b:skin>
+</head>
+
+<body>
+<div class='wrap'>
+
+  <b:section class='header' id='header' maxwidgets='1' showaddelement='no'>
+    <b:widget id='Header1' locked='true' title='AMS' type='Header' version='2'>
+      <b:widget-settings>
+        <b:widget-setting name='displayUrl'/>
+        <b:widget-setting name='displayHeight'>0</b:widget-setting>
+        <b:widget-setting name='useImage'>false</b:widget-setting>
+        <b:widget-setting name='shrinkToFit'>false</b:widget-setting>
+        <b:widget-setting name='imagePlacement'>BEHIND</b:widget-setting>
+        <b:widget-setting name='displayWidth'>0</b:widget-setting>
+      </b:widget-settings>
+      <b:includable id='main'>
+        <div class='ams-header'>
+          <h1 class='ams-title'><a expr:href='data:blog.homepageUrl'>AMS</a></h1>
+          <p class='ams-tagline'>Small tools. Clean design. Know your caps. Every time.</p>
+          <nav class='ams-nav'>
+            <ul>
+              <li><a expr:href='data:blog.homepageUrl'>Home</a></li>
+              <li><a href='https://www.youtube.com/channel/UCW5b5zJ1MW35P1x9--ExMvg'>YouTube</a></li>
+            </ul>
+          </nav>
+        </div>
+      </b:includable>
+    </b:widget>
+  </b:section>
+
+  <div class='main-wrap'>
+    <b:section class='main' id='main' showaddelement='no'>
+      <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='2'>
+        <b:widget-settings>
+          <b:widget-setting name='showDateHeader'>false</b:widget-setting>
+          <b:widget-setting name='showShareButtons'>false</b:widget-setting>
+          <b:widget-setting name='showCommentLink'>true</b:widget-setting>
+          <b:widget-setting name='showAuthor'>false</b:widget-setting>
+          <b:widget-setting name='postsPerAd'>0</b:widget-setting>
+          <b:widget-setting name='style.layout'>1x1</b:widget-setting>
+          <b:widget-setting name='showLabels'>true</b:widget-setting>
+          <b:widget-setting name='showLocation'>false</b:widget-setting>
+          <b:widget-setting name='showTimestamp'>true</b:widget-setting>
+          <b:widget-setting name='showBacklinks'>false</b:widget-setting>
+        </b:widget-settings>
+        <b:includable id='main'>
+          <b:loop values='data:posts' var='post'>
+            <article class='post'>
+              <h2><a expr:href='data:post.url'><data:post.title/></a></h2>
+              <p class='post-date'><data:post.timestamp/></p>
+              <div class='post-body'><data:post.body/></div>
+              <b:if cond='data:post.labels'>
+                <div class='post-labels'>
+                  <b:loop values='data:post.labels' var='label'>
+                    <a class='label-chip' expr:href='data:label.url'><data:label.name/></a>
+                  </b:loop>
+                </div>
+              </b:if>
+            </article>
+          </b:loop>
+          <div class='blog-pager'>
+            <b:if cond='data:newerPageUrl'><a expr:href='data:newerPageUrl'>← Newer posts</a></b:if>
+            <b:if cond='data:olderPageUrl'><a expr:href='data:olderPageUrl'>Older posts →</a></b:if>
+          </div>
+        </b:includable>
+      </b:widget>
+    </b:section>
+
+    <b:section class='sidebar' id='sidebar' showaddelement='yes'>
+      <b:widget id='Label1' locked='false' title='Topics' type='Label' version='2'>
+        <b:widget-settings>
+          <b:widget-setting name='sorting'>ALPHA</b:widget-setting>
+          <b:widget-setting name='display'>LIST</b:widget-setting>
+          <b:widget-setting name='selectedLabelsList'/>
+          <b:widget-setting name='showType'>ALL</b:widget-setting>
+          <b:widget-setting name='showFreqNumbers'>false</b:widget-setting>
+        </b:widget-settings>
+        <b:includable id='main'>
+          <div class='widget'>
+            <h3><data:title/></h3>
+            <ul>
+              <b:loop values='data:labels' var='label'>
+                <li><a expr:href='data:label.url'><data:label.name/></a></li>
+              </b:loop>
+            </ul>
+          </div>
+        </b:includable>
+      </b:widget>
+      <b:widget id='BlogSearch1' locked='false' title='Search' type='BlogSearch' version='2'>
+        <b:includable id='main'>
+          <div class='widget search'>
+            <h3><data:title/></h3>
+            <form expr:action='data:blog.searchUrl'>
+              <input expr:name='data:blog.searchQueryInputName' expr:value='data:blog.searchQuery' placeholder='Search…' type='text'/>
+            </form>
+          </div>
+        </b:includable>
+      </b:widget>
+      <b:widget id='BlogArchive1' locked='false' title='Archive' type='BlogArchive' version='2'>
+        <b:widget-settings>
+          <b:widget-setting name='showStyle'>FLAT</b:widget-setting>
+          <b:widget-setting name='yearPattern'>yyyy</b:widget-setting>
+          <b:widget-setting name='showWeekEnd'>true</b:widget-setting>
+          <b:widget-setting name='monthPattern'>MMMM yyyy</b:widget-setting>
+          <b:widget-setting name='chronological'>false</b:widget-setting>
+          <b:widget-setting name='dayPattern'>MMM dd</b:widget-setting>
+          <b:widget-setting name='weeklyPattern'>MM/dd</b:widget-setting>
+        </b:widget-settings>
+        <b:includable id='main'>
+          <div class='widget'>
+            <h3><data:title/></h3>
+            <ul>
+              <b:loop values='data:data' var='i'>
+                <li><a expr:href='data:i.url'><data:i.name/></a></li>
+              </b:loop>
+            </ul>
+          </div>
+        </b:includable>
+      </b:widget>
+    </b:section>
+  </div>
+
+  <footer class='ams-footer'>
+    © 2026 AMS · <a href='https://www.youtube.com/channel/UCW5b5zJ1MW35P1x9--ExMvg'>Subscribe to AMS on YouTube</a>
+  </footer>
+
+</div>
+</body>
+</html>
