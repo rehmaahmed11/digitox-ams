@@ -5,8 +5,13 @@ How the engine produces / updates the AMS blog theme. Brand rules: [`BRAND.md`](
 ## What the theme is
 
 The visual theme of the **AMS blog on Blogger (Google)**: one installable XML file that makes every
-post look like AMS — **light**, quiet surfaces, brand blue, tab nav bar, and a PageSpeed-Insights
-score of 100 in all four categories on every page.
+post look like AMS — **AMS Editorial v3**: light reading body, navy masthead + footer, brand blue
+accents, an asymmetric hero with a lead story and an index of hairline rows, a sticky sidebar, five
+breakpoints, and a PageSpeed-Insights score of 100 in all four categories on every page.
+
+> v2 (*AMS Light*) was rejected in review: *\u201cunprofessional\u201d* \u2014 identical boxes, no
+> hierarchy, dead space on desktop, two breakpoints. v3 fixed the design system and kept every
+> performance rule; the rules below are the ones that must survive the next redesign.
 
 → Lives in [`../theme/`](../theme): `ams-blogger-theme.xml` (install this), `legacy-dark-v1.xml`
 (the old dark glass look, reference only), `tools/build.py` (preview renderer + audit), `README.md`
@@ -33,13 +38,14 @@ score of 100 in all four categories on every page.
 |---|---|
 | 0 external requests: no webfont, no CDN CSS, no framework, no embeds | every extra request is a round trip before paint |
 | 0 bytes of JavaScript, `b:js='false'` + `b:css='false'` | skips Blogger's `widgets.js` + `widgets.css` |
-| all CSS inline in `b:skin`, ≤ 4.6 KB gzipped | fits the first round trip (≈10 × 1.4 KB) |
+| all CSS inline in `b:skin`, ≤ 5.4 KB gzipped (v3 ships 5.17 KB) | fits the first round trips; the budget moved from 4.6 KB when the sheet grew to five breakpoints \u2014 if you add a component, delete one |
 | LCP must be a text node (hero headline / post title) | text paints from the inline CSS; images and fonts do not |
 | No thumbnails in post lists | list pages stay text-only → instant, and no image requests |
 | CLS 0: `color-scheme:light`, no `@font-face`, `width`/`height` on images | no swap, no reflow |
 | ≤ 400 rendered elements per page | small DOM = cheap style/layout |
 | Every palette pair passes WCAG AA (4.5:1 text, 3:1 large) | Accessibility 100 |
 | ≥ 44 px touch targets (48 px tabs on mobile) | usable on a phone, and Lighthouse checks it |
+| Every pair, **including text on navy**, passes WCAG AA | a dark masthead is where contrast regressions hide |
 | Content rule: post images ≤ 1280 px wide, ≤ ~120 KB, `loading='lazy'`, alt text | content, not the theme, is what usually breaks LCP |
 
 > Trade-off to remember: `b:js='false'` disables Blogger's own comment form, image lightbox and
@@ -50,8 +56,9 @@ score of 100 in all four categories on every page.
 - A **new brand detail** (colour, font, element) → update [`BRAND.md`](BRAND.md) first, then the theme.
 - A **layout request** (new tab, a downloads strip, another widget) → change only the theme.
 - After any edit: `python3 theme/tools/build.py all` must finish with **0 failures**, and every
-  `WARN` cleared or explained (a warning is usually a post image over budget). Then re-upload
-  `ams-blogger-theme.xml` to Blogger and re-run PageSpeed Insights on one post.
+  `WARN` cleared or explained (a warning is usually a post image over budget; `build.py images`
+  exports web-sized copies). Then re-upload `ams-blogger-theme.xml` to Blogger and re-run
+  PageSpeed Insights on one post.
 
 ## Update checklist
 
@@ -59,6 +66,8 @@ score of 100 in all four categories on every page.
 - [ ] Valid Blogger XML (layouts v3): `b:skin` + `Header`, `Blog`, `PageList`, `Label`, `BlogSearch`, `BlogArchive`
 - [ ] `b:css='false' b:js='false' b:responsive='true' b:defaultwidgetversion='2' b:layoutsVersion='3'`
 - [ ] One `<h1>` per page, no skipped heading levels, unique ids, labelled form fields
-- [ ] Mobile: tab strip scrolls, single column under 1000 px, tap targets ≥ 44 px
+- [ ] Mobile: tab strip scrolls, single column under 1080 px, tap targets ≥ 44 px
+- [ ] Tablet (900\u20131079): one sticky masthead row, feed 2-up, sidebar as a 2-up grid under the feed
+- [ ] Laptop / desktop (1080+): sidebar sticky; large PC (1440+): wider canvas, no stretched lines
 - [ ] Contrast of any new colour checked against **both** `#FFFFFF` and `#EDF2FA`
 - [ ] Install + tweak notes in [`../theme/README.md`](../theme/README.md) still correct

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AMS Editorial — responsive check, all screens</title>
+<style>:root{color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:#F4F7FC;color:#0B1220;font:16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:26px 20px 60px}
+h1{margin:0 0 10px;font-size:30px;letter-spacing:-.03em}
+p.lede{margin:0 0 26px;max-width:70ch;color:#3D4757}
+a{color:#0050BC}
+.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+.dev{margin:0;padding:12px 12px 0;background:#fff;border:1px solid #E2E8F2;border-radius:16px;box-shadow:0 1px 2px rgba(11,18,32,.05)}
+.dev>h2{margin:0 0 4px;font-size:15px;letter-spacing:-.01em}
+.dev>p{margin:0 0 10px;font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#3D4757}
+.frame{width:100%;overflow:hidden;border-radius:10px 10px 0 0;background:#F4F7FC;border:1px solid #E2E8F2;border-bottom:0}
+.frame>iframe{display:block;border:0;background:#fff;transform-origin:0 0;width:calc(100% / var(--s));height:calc(var(--h) * 1px);transform:scale(var(--s))}
+@media (min-width:980px){.frame{width:calc(var(--w) * var(--s))}.frame>iframe{width:calc(var(--w) * 1px)}}
+.tip{margin:26px 0 0;padding:14px 16px;border-left:3px solid #005CD6;background:#EDF2FA;border-radius:0 10px 10px 0;font-size:14px;color:#3D4757}</style>
+</head>
+<body>
+<div class="wrap">
+<h1>AMS Editorial — one theme, every screen</h1>
+<p class="lede">Six real viewports, each one a live iframe of <a href="index.html">index.html</a> at that exact CSS width — so the media queries fire the way they do on the device. Below 980px the frames shrink to fit your window instead of showing their true pixel width. <a href="post.html">Post page</a> &middot; <a href="label.html">Topic page</a> &middot; <a href="index.html">back to the theme preview</a></p>
+<div class="grid"><section class="dev" style="--w:1440;--h:880;--s:0.56"><h2>Large PC / ultrawide</h2><p>1440px viewport &middot; scale 0.56</p><div class="frame"><iframe src="index.html" title="Large PC / ultrawide at 1440px" loading="lazy"></iframe></div></section>
+<section class="dev" style="--w:1280;--h:860;--s:0.6"><h2>Laptop 13-14″</h2><p>1280px viewport &middot; scale 0.6</p><div class="frame"><iframe src="index.html" title="Laptop 13-14″ at 1280px" loading="lazy"></iframe></div></section>
+<section class="dev" style="--w:1024;--h:900;--s:0.74"><h2>Small laptop / tablet landscape</h2><p>1024px viewport &middot; scale 0.74</p><div class="frame"><iframe src="index.html" title="Small laptop / tablet landscape at 1024px" loading="lazy"></iframe></div></section>
+<section class="dev" style="--w:834;--h:1040;--s:0.8"><h2>Tablet portrait (iPad)</h2><p>834px viewport &middot; scale 0.8</p><div class="frame"><iframe src="index.html" title="Tablet portrait (iPad) at 834px" loading="lazy"></iframe></div></section>
+<section class="dev" style="--w:600;--h:1020;--s:0.92"><h2>Tablet small / phablet</h2><p>600px viewport &middot; scale 0.92</p><div class="frame"><iframe src="index.html" title="Tablet small / phablet at 600px" loading="lazy"></iframe></div></section>
+<section class="dev" style="--w:390;--h:1040;--s:1.0"><h2>Phone (iPhone 15 / Pixel)</h2><p>390px viewport &middot; scale 1</p><div class="frame"><iframe src="index.html" title="Phone (iPhone 15 / Pixel) at 390px" loading="lazy"></iframe></div></section></div>
+<p class="tip">Breakpoints in the theme: <b>560px</b> phablet &middot; <b>900px</b> tablet (masthead goes sticky, feed goes 2-up, rail goes 2-up under the feed) &middot; <b>1080px</b> laptop (sidebar beside the feed) &middot; <b>1440px</b> large PC (wider canvas, larger type). Nothing between them is a gap: the fluid parts use clamp().</p>
+</div>
+</body>
+</html>

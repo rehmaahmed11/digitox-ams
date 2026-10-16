@@ -11,3 +11,5 @@ theme/preview/*
 !theme/preview/README.md
 !theme/preview/*.html
 !theme/preview/*.png
+!theme/preview/img/
+!theme/preview/img/*.png

@@ -25,7 +25,7 @@ AMS's factory for small software tools and everything that promotes them:
 | [`software/mobile/`](software/mobile) | Android / iOS apps | *(next)* |
 | [`promotional-video/`](promotional-video) | Promo videos + the code that renders them | [`ams-capslock-osd`](promotional-video/ams-capslock-osd) — 65s commercial |
 | [`blogger/`](blogger) | Ready-to-publish Blogger / Google posts | [`ams-capslock-osd`](blogger/ams-capslock-osd/post.md) |
-| [`theme/`](theme) | The AMS blog theme (Blogger XML) + its preview / audit kit | **AMS Light v2** — [`ams-blogger-theme.xml`](theme/ams-blogger-theme.xml) |
+| [`theme/`](theme) | The AMS blog theme (Blogger XML) + its preview / audit kit | **AMS Editorial v3** — [`ams-blogger-theme.xml`](theme/ams-blogger-theme.xml) |
 | [`archive/`](archive) | Original uploads, kept unchanged | — |
 
 ## How it works
