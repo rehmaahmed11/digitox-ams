@@ -25,7 +25,7 @@ AMS's factory for small software tools and everything that promotes them:
 | [`software/mobile/`](software/mobile) | Android / iOS apps | *(next)* |
 | [`promotional-video/`](promotional-video) | Promo videos + the code that renders them | [`ams-capslock-osd`](promotional-video/ams-capslock-osd) — 65s commercial |
 | [`blogger/`](blogger) | Ready-to-publish Blogger / Google posts | [`ams-capslock-osd`](blogger/ams-capslock-osd/post.md) |
-| [`theme/`](theme) | The AMS blog theme (Blogger XML) | [`ams-blogger-theme.xml`](theme/ams-blogger-theme.xml) |
+| [`theme/`](theme) | The AMS blog theme (Blogger XML) + its preview / audit kit | **AMS Light v2** — [`ams-blogger-theme.xml`](theme/ams-blogger-theme.xml) |
 | [`archive/`](archive) | Original uploads, kept unchanged | — |
 
 ## How it works
@@ -55,6 +55,7 @@ AMS's factory for small software tools and everything that promotes them:
 
 ./software/pc/ams-capslock-osd/build_linux.sh       # -> software/pc/ams-capslock-osd/release/*.exe
 ./promotional-video/ams-capslock-osd/build_video.sh # -> promotional-video/ams-capslock-osd/output/*.mp4
+python3 theme/tools/build.py all                    # -> theme/preview/*.html + the 100/100 audit
 ```
 
 ## Ask for the next product
@@ -64,6 +65,8 @@ AMS's factory for small software tools and everything that promotes them:
 > Make the promo video for **‹tool›** following engine/WORKFLOW.md.
 >
 > Write the Blogger post for **‹tool›** following engine/blogger.md.
+>
+> Redesign / tune the blog theme following engine/theme.md (it must keep the audit at 0 failures).
 >
 > New instruction: *‹rule›* — update the engine.
 
