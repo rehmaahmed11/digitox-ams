@@ -123,12 +123,13 @@ SITE = {
     "title": "AMS", "description": "Small tools. Big care.",
     "links": [{"name": "Downloads", "target": "/p/downloads.html"},
               {"name": "Changelog", "target": "/p/changelog.html"}],
-    "labels": [dict(l, count=str(3 - i)) for i, l in enumerate([
+    "labels": [dict(l, count=c) for l, c in zip([
         {"name": "AMS", "url": "/search/label/AMS"},
         {"name": "Desktop utilities", "url": "/search/label/Desktop%20utilities"},
         {"name": "Design", "url": "/search/label/Design"},
         {"name": "Free tool", "url": "/search/label/Free%20tool"},
-        {"name": "Windows", "url": "/search/label/Windows"}])],
+        {"name": "Windows", "url": "/search/label/Windows"}],
+        ["3", "1", "1", "2", "2"])],
     "data": [{"name": "October 2026", "url": "/2026_10_01_archive.html"},
              {"name": "September 2026", "url": "/2026_09_01_archive.html"}],
     "posts": POSTS,
@@ -373,6 +374,12 @@ def inline_md(s: str) -> str:
 def img_tag(m) -> str:
     alt, src = m.group(1), m.group(2)
     path = os.path.normpath(os.path.join(PREVIEW_DIR, src))
+    # theme/preview/img/ holds web-sized copies (see `build.py images`); the preview uses
+    # them when present, exactly like a post should reference an exported image, not the
+    # installer asset. Falls back to the original path otherwise.
+    web = os.path.join(PREVIEW_DIR, "img", os.path.basename(src))
+    if os.path.exists(web):
+        src, path = f"img/{os.path.basename(src)}", web
     size = png_size(path)
     w, h = (size if size else (800, 450))
     return (f'<img alt="{esc(alt, True)}" src="{esc(src, True)}" width="{w}" height="{h}" '
@@ -473,7 +480,8 @@ def build_previews(root, xml_text: str) -> list[tuple[str, int, list[str]]]:
         ])
         note = ("<p class='preview-note'>Static preview of <code>theme/ams-blogger-theme.xml</code>"
                 " \u2014 same CSS, same markup, sample content. <a href='index.html'>Home</a> \u00b7 "
-                "<a href='post.html'>Post</a> \u00b7 <a href='label.html'>Topic</a></p>")
+                "<a href='post.html'>Post</a> \u00b7 <a href='label.html'>Topic</a> \u00b7 "
+                "<a href='responsive.html'>Devices</a></p>")
         if ctx.errors:
             note += ("<p class='preview-note'>renderer notes: "
                      + esc("; ".join(sorted(set(ctx.errors)))) + "</p>")
@@ -482,6 +490,73 @@ def build_previews(root, xml_text: str) -> list[tuple[str, int, list[str]]]:
             fh.write(out)
         report.append((fname, len(out.encode()), sorted(set(ctx.errors))))
     return report
+
+
+DEVICES = (
+    # name, css width, iframe height, scale shown at >=980px viewports
+    ("Large PC / ultrawide", 1440, 880, .56),
+    ("Laptop 13-14\u2033", 1280, 860, .60),
+    ("Small laptop / tablet landscape", 1024, 900, .74),
+    ("Tablet portrait (iPad)", 834, 1040, .80),
+    ("Tablet small / phablet", 600, 1020, .92),
+    ("Phone (iPhone 15 / Pixel)", 390, 1040, 1.0),
+)
+
+
+def build_responsive() -> str:
+    """theme/preview/responsive.html - the same index.html rendered in one frame per
+    breakpoint (CSS-only, no JS, no screenshots to re-shoot). Each frame is a real
+    viewport at that width, so the media queries fire exactly as they do on the device."""
+    css = "\n".join([
+        ":root{color-scheme:light}",
+        "*{box-sizing:border-box}",
+        "body{margin:0;background:#F4F7FC;color:#0B1220;"
+        "font:16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}",
+        ".wrap{max-width:1180px;margin:0 auto;padding:26px 20px 60px}",
+        "h1{margin:0 0 10px;font-size:30px;letter-spacing:-.03em}",
+        "p.lede{margin:0 0 26px;max-width:70ch;color:#3D4757}",
+        "a{color:#0050BC}",
+        ".grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}",
+        ".dev{margin:0;padding:12px 12px 0;background:#fff;border:1px solid #E2E8F2;"
+        "border-radius:16px;box-shadow:0 1px 2px rgba(11,18,32,.05)}",
+        ".dev>h2{margin:0 0 4px;font-size:15px;letter-spacing:-.01em}",
+        ".dev>p{margin:0 0 10px;font-size:12.5px;font-weight:700;letter-spacing:.09em;"
+        "text-transform:uppercase;color:#3D4757}",
+        ".frame{width:100%;overflow:hidden;border-radius:10px 10px 0 0;background:#F4F7FC;"
+        "border:1px solid #E2E8F2;border-bottom:0}",
+        ".frame>iframe{display:block;border:0;background:#fff;transform-origin:0 0;"
+        "width:calc(100% / var(--s));height:calc(var(--h) * 1px);transform:scale(var(--s))}",
+        # from 980px up the frames are shown at their true device width
+        "@media (min-width:980px){.frame{width:calc(var(--w) * var(--s))}"
+        ".frame>iframe{width:calc(var(--w) * 1px)}}",
+        ".tip{margin:26px 0 0;padding:14px 16px;border-left:3px solid #005CD6;background:#EDF2FA;"
+        "border-radius:0 10px 10px 0;font-size:14px;color:#3D4757}",
+    ])
+    cards = "\n".join(
+        f'<section class="dev" style="--w:{w};--h:{h};--s:{s}"><h2>{esc(name)}</h2>'
+        f'<p>{w}px viewport &middot; scale {s:g}</p>'
+        f'<div class="frame"><iframe src="index.html" title="{esc(name)} at {w}px" '
+        f'loading="lazy"></iframe></div></section>'
+        for name, w, h, s in DEVICES)
+    return "\n".join([
+        "<!DOCTYPE html>", '<html lang="en">', "<head>", '<meta charset="UTF-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        "<title>AMS Editorial \u2014 responsive check, all screens</title>",
+        f"<style>{css}</style>", "</head>", "<body>",
+        '<div class="wrap">',
+        "<h1>AMS Editorial \u2014 one theme, every screen</h1>",
+        '<p class="lede">Six real viewports, each one a live iframe of <a href="index.html">'
+        "index.html</a> at that exact CSS width \u2014 so the media queries fire the way they do "
+        "on the device. Below 980px the frames shrink to fit your window instead of showing "
+        "their true pixel width. <a href=\"post.html\">Post page</a> &middot; "
+        "<a href=\"label.html\">Topic page</a> &middot; "
+        "<a href=\"index.html\">back to the theme preview</a></p>",
+        f'<div class="grid">{cards}</div>',
+        '<p class="tip">Breakpoints in the theme: <b>560px</b> phablet &middot; <b>900px</b> '
+        "tablet (masthead goes sticky, feed goes 2-up, rail goes 2-up under the feed) &middot; "
+        "<b>1080px</b> laptop (sidebar beside the feed) &middot; <b>1440px</b> large PC (wider "
+        "canvas, larger type). Nothing between them is a gap: the fluid parts use clamp().</p>",
+        "</div>", "</body>", "</html>", ""])
 
 
 # ---------------------------------------------------------------- audit
@@ -528,7 +603,7 @@ def audit(root, xml_text: str) -> int:
     passed(a.get("defaultwidgetversion") == "2", "b:defaultwidgetversion='2'")
     passed(a.get("responsive") == "true", "b:responsive='true' (same template on phone + desktop)")
     passed(a.get("lang") == "en", "<html lang> set (screen readers, and Lighthouse SEO)")
-    passed(a.get("templateVersion") == "2.0.0", f"templateVersion {a.get('templateVersion')}")
+    passed(a.get("templateVersion") == "3.0.0", f"templateVersion {a.get('templateVersion')}")
 
     head = el.find(f"{{{XHTML}}}head")
     tags = [t.tag for t in head.iter()]
@@ -607,7 +682,8 @@ def audit(root, xml_text: str) -> int:
      animation-duration animation-name transition-duration transition-property -webkit-touch-callout
      -webkit-font-smoothing contain contain-intrinsic-size font-display font-feature-settings
      -webkit-background-clip -webkit-box-reflect -webkit-font-smoothing -webkit-overflow-scrolling
-     -webkit-text-fill-color -webkit-text-size-adjust -webkit-tap-highlight-color""".split())
+     -webkit-text-fill-color -webkit-text-size-adjust -webkit-tap-highlight-color
+     align-content background-image grid-column overflow-wrap""".split())
     odd = []
     for sel, bodytxt in css_rules(css):
         for prop in re.findall(r"(?:^|;)\s*([a-z-]+)\s*:", bodytxt):
@@ -653,10 +729,12 @@ def audit(root, xml_text: str) -> int:
 
     css_bytes = len(css.encode())
     gz = len(gzip.compress(css.encode(), 9))
-    # ~10 x 1.4 KB of initial congestion window: stay under that and the page paints
-    # after a single round trip, which is what makes FCP/LCP fast on a phone.
-    passed(gz <= 4600, f"inline CSS {css_bytes:,} B -> {gz:,} B gzipped: fits the first "
-                       f"round trip (budget 4,600 B gz)")
+    # The initial congestion window is ~10 x 1.4 KB per round trip; inline CSS that fits
+    # in ~1.5 round trips still paints with the document, which is what keeps FCP = LCP on
+    # a phone. v3 (AMS Editorial) ships five real breakpoints, so the budget moved from
+    # 4,600 B gz (v2, one tablet breakpoint) to 5,400 B gz - still 0 extra requests.
+    passed(gz <= 5400, f"inline CSS {css_bytes:,} B -> {gz:,} B gzipped: fits the first "
+                       f"round trips (budget 5,400 B gz)")
     dead = [t for t in tokens(css) if f"var({t})" not in css]
     passed(not dead, "no unused design tokens" + ("" if not dead else f" - dead: {dead}"))
     passed(len(xml_text.encode()) < 60000, f"theme file {len(xml_text.encode()):,} B total")
@@ -677,6 +755,12 @@ def audit(root, xml_text: str) -> int:
              ("#EEF3FA", "#0B1220", 4.5, "about card heading area"),
              ("#DCE6F5", "#132442", 4.5, "about card body text"),
              ("#9ECBFF", "#0B1220", 4.5, "about card title"),
+             ("#FFFFFF", "--navy", 4.5, "brand wordmark + active tab on the masthead"),
+             ("--on-navy", "--navy", 4.5, "masthead / footer body text on navy"),
+             ("--on-navy-2", "--navy", 4.5, "tagline + widget rules on navy"),
+             ("--on-navy-2", "--navy-2", 4.5, "footer text at the top of the gradient"),
+             ("--on-navy", "--navy-2", 4.5, "masthead brand row at the top of the gradient"),
+             ("--accent-2", "--surface", 4.5, "LATEST flag on the lead card"),
              ]
     rows = []
     for fg, bg, need_r, what in pairs:
@@ -732,7 +816,7 @@ def audit(root, xml_text: str) -> int:
         ok.append("post images inside the byte/width budget")
 
     print("=" * 78)
-    print("AMS Light \u00b7 theme audit      theme/ams-blogger-theme.xml")
+    print("AMS Editorial \u00b7 theme audit    theme/ams-blogger-theme.xml")
     print("=" * 78)
     for m in ok:
         print("  PASS  " + m)
@@ -765,6 +849,50 @@ def audit(root, xml_text: str) -> int:
 
 # ---------------------------------------------------------------- CLI
 
+def shrink_images(dry: bool = False) -> int:
+    """Export web-sized copies of every image the sample post uses (<=1280 px wide,
+    8-bit, max PNG compression) into theme/preview/img/. Needs ImageMagick's `convert`;
+    the audit only checks the byte budget, it cannot rewrite content."""
+    md = "" if not os.path.exists(POST_MD) else open(POST_MD, encoding="utf-8").read()
+    srcs = sorted(set(re.findall(r"!\[[^\]]*\]\(([^)]+\.(?:png|jpe?g))\)", md)))
+    os.makedirs(os.path.join(PREVIEW_DIR, "img"), exist_ok=True)
+    for src in srcs:
+        abspath = os.path.normpath(os.path.join(PREVIEW_DIR, src))
+        out = os.path.join(PREVIEW_DIR, "img", os.path.basename(src))
+        if not os.path.exists(abspath):
+            print(f"  skip   {src} (not in the repo)")
+            continue
+        if os.path.exists(out) and os.path.getmtime(out) > os.path.getmtime(abspath):
+            print(f"  up to date  {os.path.basename(out)}  {os.path.getsize(out) // 1024} KB")
+            continue
+        if dry:
+            print(f"  would export  {src} -> theme/preview/img/{os.path.basename(src)}")
+            continue
+        cmd = ["convert", abspath, "-resize", "1280x1280>", "-strip", "-depth", "8",
+               "-define", "png:compression-level=9", out]
+        try:
+            import subprocess
+            subprocess.run(cmd, check=True)
+            # a photo compresses better as JPEG; a flat UI shot stays a PNG
+            if os.path.getsize(out) > 122880:
+                j = out.rsplit(".", 1)[0] + ".jpg"
+                subprocess.run(["convert", abspath, "-resize", "1280x1280>", "-strip",
+                                "-quality", "82", j], check=True)
+                if os.path.getsize(j) < os.path.getsize(out):
+                    os.remove(out)
+                    print(f"  wrote  theme/preview/img/{os.path.basename(j)}"
+                          f"  {os.path.getsize(j) // 1024} KB")
+                    continue
+            print(f"  wrote  theme/preview/img/{os.path.basename(out)}"
+                  f"  {os.path.getsize(out) // 1024} KB")
+        except FileNotFoundError:
+            print("  ImageMagick (`convert`) not found - skipped; the audit will warn about "
+                  "the original file size")
+        except Exception as exc:                                       # noqa: BLE001
+            print(f"  failed {src}: {exc}")
+    return 0
+
+
 def main() -> int:
     cmd = sys.argv[1] if len(sys.argv) > 1 else "all"
     if not os.path.exists(THEME):
@@ -776,10 +904,19 @@ def main() -> int:
     except ET.ParseError as exc:
         print(f"FAIL  theme is not well-formed XML: {exc}")
         return 1
+    if cmd == "images":
+        return shrink_images()
+    if cmd == "preview" and "--images" in sys.argv:
+        shrink_images()
     if cmd in ("preview", "all"):
         for fname, size, errs in build_previews(root, xml_text):
             print(f"  wrote theme/preview/{fname:<12} {size:>7,} B"
                   + (f"   [{len(errs)} renderer notes]" if errs else ""))
+        rp = os.path.join(PREVIEW_DIR, "responsive.html")
+        with open(rp, "w", encoding="utf-8") as fh:
+            fh.write(build_responsive())
+        print(f"  wrote theme/preview/{'responsive.html':<12} "
+              f"{os.path.getsize(rp):>7,} B   (6 device frames, CSS-only)")
         print("  view it: python3 theme/tools/build.py serve  ->  /theme/preview/index.html")
     if cmd == "serve":
         os.chdir(REPO)

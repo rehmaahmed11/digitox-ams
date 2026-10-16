@@ -20,13 +20,16 @@
 | Problem red | `#FF545C` | the "pain" scenes only |
 | YouTube red | `#FF2626` → `#CC0000` | Subscribe button |
 
-### Blog (light theme)
+### Blog (light theme, navy chrome)
 
-The blog is **light** (readability + PageSpeed); the apps, videos and OSD stay dark. Same brand blues.
+The blog body is **light** (readability + PageSpeed) with a **navy masthead and footer**; the apps,
+videos and OSD stay dark. Same brand blues.
 
 | Role | Hex | Use |
 |---|---|---|
-| Page / card / tint | `#F6F8FC` · `#FFFFFF` · `#EDF2FA` | light surfaces |
+| Page / card / tint | `#F4F7FC` · `#FFFFFF` · `#EDF2FA` | light surfaces |
+| Masthead / footer | `#0B1220` → `#111E36` | navy chrome, 2 px `#409CFF → #005CD6` hairline under the bar |
+| Text on navy | `#DCE6F5`, muted `#9ECBFF` | never lighter (both are the AA floor) |
 | Text | `#0B1220`, muted `#3D4757` | body / meta — fixed contrast floors, never lighten |
 | Link + active tab | `#0050BC` (hover `#003E99`) | AA-checked on white and on the tint |
 | Brand gradient | `#409CFF → #005CD6` | the mark, the 2 px hairline under the bar, glows |
@@ -34,7 +37,8 @@ The blog is **light** (readability + PageSpeed); the apps, videos and OSD stay d
 | Subscribe gradient | `#C42B25 → #8E1414` | YouTube only |
 
 **Contrast rule (brand-wide for the blog):** every text/background pair must pass WCAG AA (4.5:1,
-3:1 for large text) on *both* white and `#EDF2FA`. `theme/tools/build.py audit` checks the table.
+3:1 for large text) on white, on `#EDF2FA`, on the hero tint **and** on both navy ends.
+`theme/tools/build.py audit` measures all of them.
 **Never** put white text on `#409CFF` (2.6:1) and never use gradient-filled text on the blog.
 
 ## Typography
@@ -52,15 +56,22 @@ The blog is **light** (readability + PageSpeed); the apps, videos and OSD stay d
 - Motion: fade in 170 ms (ease-out), hold, fade out 420 ms (ease-in-out), slight zoom 0.94→1 and a 14 px upward slide.
 - Click-through, never takes focus, adapts to screen scaling (DPI-aware), shows on the monitor where the mouse is.
 
-## Blog style (light)
-- Flat white cards on `#F6F8FC`, 1 px `#E2E8F2` border, radius 14 (cards) / 22 (article), soft
-  low-shadow. No glass, no blur, no glow on the blog.
-- Sticky top bar: mark + `AMS` wordmark left, **tabs** right (2 px brand underline on the active tab,
-  scrollable strip on phones — never a hamburger menu).
+## Blog style (light body, navy chrome)
+- Flat white cards on `#F4F7FC`, 1 px `#E2E8F2` border, radius 14 (cards / widgets) / 20 (lead +
+  article), soft low-shadow. No glass, no blur, no glow on the blog.
+- Sticky masthead: navy gradient, mark + `AMS` wordmark + tagline left, **tabs** right (2 px brand
+  underline on the active tab, scrollable strip under 900 px — never a hamburger menu).
 - Headline first, always: the hero on the homepage and the post title on a post are the largest
   painted elements (that is what makes LCP fast).
+- **Hierarchy over uniformity**: hero = kicker \u2192 headline \u2192 standfirst \u2192 CTA \u2192 three
+  brand claims; the newest post is a *lead story* (boxed, `LATEST` flag), the rest are hairline
+  **index rows**. Identical repeated boxes = template look, and v2 was rejected for exactly that.
+- Small caps labels (`F E A T U R E S`) stay: 12 px min, `letter-spacing: .1\u2013.15em`, weight 700\u2013800.
 - Buttons: pill, 46 px tall, one primary per block; Subscribe in brand red.
-- © 2026 AMS + YouTube link + Back to top in the footer.
+- Footer: navy, three columns (brand + blog links + elsewhere) over a `© 2026 AMS` bar with
+  YouTube link and Back to top.
+- **Responsiveness is part of the brand**: 560 / 900 / 1080 / 1440 px are designed layouts, not
+  fallbacks \u2014 see `theme/README.md` for what each one does.
 
 ## App icon
 Rounded square (radius 22%) with a blue gradient `#409CFF → #005CD6` and a white glyph. Tray icon: blue when active, grey when inactive.
