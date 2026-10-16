@@ -26,6 +26,24 @@ How the engine produces a blog post for each product. Brand rules: [`BRAND.md`](
 7. **Watch the video** — link to the 65s promo on YouTube.
 8. **Footer** — © 2026 AMS + Subscribe link.
 
+## Performance rules (the theme is 100/100, do not spend it in the post)
+
+| Rule | Detail |
+|---|---|
+| Image width | export at 1280 px wide max for the 720 px reading column (2x), then let Blogger resize |
+| Image weight | aim < 120 KB each; WebP or compressed PNG; **no** screenshots straight from the editor |
+| Image tags | keep Blogger's `width`/`height`, add `loading='lazy' decoding='async'`, alt text on all |
+| Order | the first thing in the post is text (the hook) — never an image, iframe or ad slot |
+| Video | link to the promo, embed only *below* the download section; never autoplay |
+| Meta description | fill *Search description* in the post editor: the theme passes it straight through |
+| Labels | first label = the tab it belongs to (`Free tool`, `Windows`) so the tab bar links stay exact |
+| Buttons | `.btn .btn-primary` for the download, `.btn .btn-red` for Subscribe — the theme styles them |
+| Nothing else | no inline `<style>`, no `<script>`, no third-party embeds, no `<center>`/`font` tags |
+
+`python3 theme/tools/build.py audit` renders the sample post (`blogger/ams-capslock-osd/post.md`)
+through the theme and checks its images, headings and alt text — a post that breaks the budget shows
+up there as a `WARN`. Point `POST_MD` at your own `post.md` to check a new one before publishing.
+
 ## Voice
 
 Same as everything AMS: friendly, punchy, short sentences, confident (see [`BRAND.md`](BRAND.md) "Voice").
